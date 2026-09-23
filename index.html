@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link 
+  href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600&display=swap" 
+  rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosso Pedido de Casamento</title>
+<style>
+  :root {
+  --fonte-titulo: 'Great Vibes', cursive;
+  --cor-primaria: #000000;      /* preto - títulos e detalhes */
+  --cor-secundaria: #ffd6e0;    /* rosa claro - fundo da galeria */
+  --cor-texto: #000000;         /* preto - texto geral */
+  --fundo-gradiente: #ff8fab;   /* rosa - fundo geral do site */
+}
+   
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--cor-texto);
+    background: var(--fundo-gradiente);
+    overflow-x: hidden;
+  }
+
+  /* ---------- TELA DE INÍCIO ---------- */
+  #startScreen {
+    position: fixed; inset:0;
+    background: var(--fundo-gradiente);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; z-index:1000;
+  }
+  #startScreen h1 {
+    font-family: var(--fonte-titulo);
+    font-size: 2rem; margin-bottom: 20px; color: var(--cor-primaria);
+  }
+  #startBtn {
+    padding: 14px 34px;
+    font-size: 1.1rem;
+    border: none; border-radius: 40px;
+    background: var(--cor-primaria); color: #fff;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform .3s;
+  }
+  #startBtn:hover { transform: scale(1.08); }
+
+  /* ---------- CONTEÚDO PRINCIPAL ---------- */
+  #content { display:none; }
+
+  /* HERO */
+  .hero {
+    height: 100vh; width:100%;
+    background: url('fotos/capa.jpg') center/cover no-repeat; /* EDITAR: sua foto de capa */
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .hero::after {
+    content:""; position:absolute; inset:0;
+    background: rgba(0,0,0,0.35);
+  }
+  .hero-text {
+    position:relative; z-index:2; text-align:center; color:#fff;
+    opacity:0; transform:translateY(30px);
+    animation: fadeUp 1.5s forwards 0.5s;
+  }
+  .hero-text h1 { font-family: var(--fonte-titulo); font-size: 3rem; }
+  .hero-text p { font-size: 1.2rem; margin-top:10px; }
+
+  @keyframes fadeUp {
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* HISTÓRIA / TIMELINE */
+  .story {
+    padding: 100px 8%;
+  }
+  .story-block {
+    display:flex; align-items:center; gap:40px;
+    margin-bottom: 100px;
+    opacity:0; transform:translateY(60px);
+    transition: all 1s ease;
+  }
+  .story-block.visible { opacity:1; transform:translateY(0); }
+  .story-block.reverse { flex-direction: row-reverse; }
+  .story-block img, .story-block video {
+    width:50%; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  .story-block .text { width:50%; }
+  .story-block .text h2 {
+    font-family: var(--fonte-titulo); color: var(--cor-primaria); margin-bottom:15px;
+  }
+  .story-block .text p { line-height: 1.6; font-size:1.05rem; }
+
+  @media (max-width: 768px) {
+    .story-block, .story-block.reverse { flex-direction: column; }
+    .story-block img, .story-block video, .story-block .text { width:100%; }
+  }
+
+  /* GALERIA */
+  .gallery {
+    background: var(--cor-secundaria);
+    padding: 80px 8%; text-align:center;
+  }
+  .gallery h2 {
+    font-family: var(--fonte-titulo); color: var(--cor-primaria); margin-bottom:40px; font-size:2.2rem;
+  }
+  .gallery-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap:20px;
+  }
+  .gallery-grid img, .gallery-grid video {
+    width:100%; height:220px; object-fit:cover; border-radius:14px;
+    transition: transform .4s;
+  }
+  .gallery-grid img:hover, .gallery-grid video:hover { transform: scale(1.05); }
+
+  /* PEDIDO FINAL */
+  .proposal {
+    height:100vh; position:relative; overflow:hidden;
+    background: linear-gradient(135deg, #7a1f3d, #d1436b);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; color:#fff;
+  }
+  .proposal h1 {
+    font-family: var(--fonte-titulo); font-size: 2.4rem; max-width: 800px;
+    min-height: 90px;
+  }
+  .proposal .buttons { margin-top: 40px; position:relative; height:80px; width:280px; }
+  .btn-sim, .btn-nao {
+    padding: 14px 30px; border:none; border-radius: 40px;
+    font-size: 1.1rem; cursor:pointer; position:absolute;
+  }
+  .btn-sim { background:#fff; color:var(--cor-primaria); left:0; }
+  .btn-nao { background:transparent; border:2px solid #fff; color:#fff; right:0; }
+
+  .final-message {
+    display:none; font-family: var(--fonte-titulo); font-size: 2.6rem; margin-top:20px;
+  }
+
+  .heart {
+    position:absolute; bottom:-10%; font-size: 1.6rem; color:#fff;
+    animation: floatUp linear infinite;
+    opacity:0.7;
+  }
+  @keyframes floatUp {
+    to { transform: translateY(-120vh) rotate(360deg); opacity:0; }
+  }
+
+  .confetti {
+    position:fixed; top:-10px; width:10px; height:10px; z-index:2000;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- TELA DE INÍCIO -->
+  <div id="startScreen">
+   <h1>Prepare o coração para uma surpresa...</h1>
+<button id="startBtn">Abrir minha surpresa</button>
+  </div>
+
+  <!-- ÁUDIO DE FUNDO -->
+  <audio id="bgMusic" loop>
+    <source src="src/musicadefundo.mp3" type="audio/mpeg"> <!-- EDITAR: sua música -->
+  </audio>
+
+  <div id="content">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Yrllon & Rayane</h1>
+        <p>Uma jornada que começou com um sorriso...</p>
+      </div>
+    </section>
+
+    <!-- HISTÓRIA -->
+    <section class="story" id="story">
+
+      <div class="story-block">
+        <img src="src/imagem07.JPEG" alt="Nosso primeiro encontro"> <!-- EDITAR -->
+        <div class="text">
+          <h2>Como tudo começou</h2>
+          <p>E foi naquele pagode caótico da Pampulha que eu vi o brilho no seu olhar, você toda sequelada por causa do Alferes marchando no meio do pagode que me encantou... ah, saudades!!!</p>
+        </div>
+      </div>
+
+      <div class="story-block reverse">
+        <img src="src/imagem01.JPEG" alt="Momento especial"> <!-- EDITAR -->
+        <div class="text">
+          <h2>Um momento inesquecível</h2>
+          <p>E foi na nossa primeira viagem que tivemos uma aproximação maior da nossa intimidade, um passeio de "tirar o fôlego", e põe fôlego nisso, 18km de trilha e duas paisagens incríveis, você sorrindo de um lado e simplesmente a natureza do outro, que encanto!</p>
+        </div>
+      </div>
+
+      <div class="story-block">
+        <img src="src/imagem09.JPEG" alt="Nosso primeiro encontro"> <!-- EDITAR -->
+        <div class="text">
+          <h2>Crescendo juntos</h2>
+          <p>Durante todo esse tempo, não tivemos apenas momentos bons, mas também ruins que fortalecem e nos fazem melhorar a cada dia (eu tento), que Deus continue abençoando essa nossa união!</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- GALERIA -->
+    <section class="gallery">
+      <h2>Nossos Momentos</h2>
+      <div class="gallery-grid">
+  <img src="src/imagem06.jpeg">
+  <img src="src/imagem02.jpeg">
+  <img src="src/imagem08.jpeg"> <!-- nova foto no lugar do vídeo -->
+  <img src="src/imagem03.jpeg">
+  <img src="src/imagem04.jpeg">
+  <img src="src/imagem05.jpeg">
+</div>
+    </section>
+
+    <!-- PEDIDO FINAL -->
+    <section class="proposal" id="proposal">
+      <h1 id="typedText"></h1>
+      <div class="buttons">
+        <button class="btn-sim" onclick="dizerSim()">Sim, quero! 💍</button>
+        <button class="btn-nao" id="btnNao">Não</button>
+      </div>
+      <div class="final-message" id="finalMessage">Eu te amo, para sempre. ❤</div>
+    </section>
+
+  </div>
+
+<script>
+  // ---------- INÍCIO / MÚSICA ----------
+  const startScreen = document.getElementById('startScreen');
+  const startBtn = document.getElementById('startBtn');
+  const content = document.getElementById('content');
+  const music = document.getElementById('bgMusic');
+
+  startBtn.addEventListener('click', () => {
+    startScreen.style.display = 'none';
+    content.style.display = 'block';
+    music.play();
+  });
+
+  // ---------- ANIMAÇÃO AO ROLAR ----------
+  const blocks = document.querySelectorAll('.story-block');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.3 });
+  blocks.forEach(b => observer.observe(b));
+
+  // ---------- EFEITO DE DIGITAÇÃO NO PEDIDO ----------
+  const frase = "Rayane, você quer casar comigo?"; // EDITAR
+  const typedText = document.getElementById('typedText');
+  let i = 0;
+
+  const proposalObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && i === 0) {
+        typeWriter();
+      }
+    });
+  }, { threshold: 0.5 });
+  proposalObserver.observe(document.getElementById('proposal'));
+
+  function typeWriter() {
+    if (i < frase.length) {
+      typedText.textContent += frase.charAt(i);
+      i++;
+      setTimeout(typeWriter, 60);
+    }
+  }
+
+  // ---------- BOTÃO "NÃO" FOGE DO MOUSE ----------
+  const btnNao = document.getElementById('btnNao');
+  btnNao.addEventListener('mouseenter', () => {
+    const x = Math.random() * 180 - 90;
+    const y = Math.random() * 60 - 30;
+    btnNao.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  // ---------- CORAÇÕES FLUTUANTES ----------
+  function criarCoracao() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.textContent = '❤';
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDuration = (4 + Math.random() * 4) + 's';
+    document.getElementById('proposal').appendChild(heart);
+    setTimeout(() => heart.remove(), 8000);
+  }
+  setInterval(criarCoracao, 600);
+
+  // ---------- CONFETE AO CLICAR EM "SIM" ----------
+  function dizerSim() {
+    for (let c = 0; c < 120; c++) {
+      const conf = document.createElement('div');
+      conf.classList.add('confetti');
+      conf.style.left = Math.random() * 100 + 'vw';
+      conf.style.background = `hsl(${Math.random()*360}, 90%, 65%)`;
+      conf.style.animationDuration = (2 + Math.random()*2) + 's';
+      document.body.appendChild(conf);
+      setTimeout(() => conf.remove(), 4000);
+    }
+    document.querySelector('.buttons').style.display = 'none';
+    document.getElementById('finalMessage').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
